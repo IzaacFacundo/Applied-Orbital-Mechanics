@@ -1,0 +1,342 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Task 2</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-04-22"><meta name="DC.source" content="ProjectTask2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Task 2</h1><p>Here is the code for task 2</p><pre class="codeinput">mu = 398600.4415;
+j2 = 0.0010826267;
+radEarth = 6378.1363; <span class="comment">% km</span>
+a = 6500;
+e = 0.001;
+ta1 = 20; <span class="comment">% In Degrees!</span>
+E = @(ta) (2*atan2(sqrt(1-e)*tan(deg2rad(ta)/2),sqrt(1+e)));  <span class="comment">% in rad</span>
+E1 = E(ta1);
+lat1 = 30.3; <span class="comment">% degrees N</span>
+lon1 = 360 - 120.6; <span class="comment">% degrees E</span>
+n = 10;
+lon2 = 360 - 97.7; <span class="comment">% degrees E</span>
+lat2 = lat1;
+g = 9.81/1000; <span class="comment">% km/s^2</span>
+p = a*(1-e^2); <span class="comment">% semilatus rectum</span>
+Per = 2*pi*sqrt(a^3/mu); <span class="comment">% Period in seconds</span>
+
+r1 =(p/(1+e*cosd(ta1)));
+V = @ (r) (sqrt(g * radEarth^2 * (2/r - 1/a)));
+V1 = V(r1);
+Vc1 = sqrt(g*radEarth^2/r1);
+
+gamma1 = acosd(sqrt(p/r1))*(Vc1/V1);
+
+we = 2*pi/86164;
+<span class="comment">% initialization</span>
+t1 = (Per/(2*pi))*(E1 - e*sin(E1));
+
+lon2e = rad2deg(deg2rad(lon2) + n*we*Per); <span class="comment">% lon2e in deg</span>
+
+t2et1 = (Per/360)*(lon2e - lon1); <span class="comment">% in deg</span>
+
+<span class="comment">% first iteration</span>
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1); <span class="comment">% in deg</span>
+
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1; <span class="comment">% in deg</span>
+
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+
+az1 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); <span class="comment">% in deg</span>
+
+i1 = acosd(sind(az1)*cosd(lat1)); <span class="comment">% in deg</span>
+
+<span class="comment">% Oblateness Correction (only for first iteration)</span>
+
+nodalreg = ((-1*1.5*sqrt(mu)*j2*radEarth^2)/(((1-e^2)^2)*a^(7/2)))*cosd(i1); <span class="comment">%draan/dt</span>
+apsreg = ((-1.5*(sqrt(mu)*j2*radEarth^2))/(((1-e^2)^2)*a^(7/2))) * (2.5*(sind(i1))^2 - 2); <span class="comment">%dwdt</span>
+
+delw = rad2deg(apsreg*(n*Per + t2et1)); <span class="comment">% in deg</span>
+delraan = rad2deg(nodalreg *(n*Per + t2et1)); <span class="comment">%in deg</span>
+
+w = asind(sind(lat1)/sind(i1)) - ta1; <span class="comment">% in deg</span>
+
+dellat = (sind(i1)*cosd(w + ta2e) * delw / cosd(lat2));
+dellon = (cosd(i1)*(secd(w + ta2e))^2 * delw)/(1 + (cosd(i1)*tand(w + ta2e))^2) + delraan;
+
+lon2 = lon2 - dellon;
+lat2 = lat2 - dellat;
+
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+
+t2et1 = t2e - t1;
+
+<span class="comment">% Oblateness Corrected, Iteration 2</span>
+lon2e = rad2deg(deg2rad(lon2) + n*we*Per);
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1);
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1;
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+az2 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); <span class="comment">% in deg</span>
+i2 = acosd(sind(az2)*cosd(lat1)); <span class="comment">% in deg</span>
+t2et1 = t2e - t1;
+
+<span class="comment">% Iteration 3</span>
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1);
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1;
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+az3 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); <span class="comment">% in deg</span>
+i3 = acosd(sind(az3)*cosd(lat1)); <span class="comment">% in deg</span>
+t2et1 = t2e - t1;
+
+<span class="comment">% Iteration 4</span>
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1);
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1;
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+az4 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); <span class="comment">% in deg</span>
+i4 = acosd(sind(az4)*cosd(lat1)); <span class="comment">% in deg</span>
+t2et1 = t2e - t1;
+
+<span class="comment">% Final Orbit Elements</span>
+
+dellonn1 = atand(sind(lat1)*tand(az3));
+lonnref = lon1 - dellonn1;
+raan = lonnref;
+w = asind(sind(lat1)/sind(i4)) - ta1;
+
+[r,v] = oe2rv(mu,a,e,deg2rad(i4),deg2rad(raan),deg2rad(ta1),deg2rad(w)); <span class="comment">% Burnout Position and Velocity!!!</span>
+
+<span class="comment">% Orbit Propagation with J2</span>
+tp = 2451545.0; <span class="comment">% JD_utc</span>
+time = tp*86400:1:tp*86400 + 10*Per + t2et1;
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+y0 = [r;v];
+[T,traj] = ode45(@j2prop,time,y0,odeoptions);
+<span class="comment">%[T,full] = ode45(@fullprop,time,y0,odeoptions);</span>
+
+latplot = zeros(length(T),1);
+lonplot = zeros(length(T),1);
+<span class="comment">% latplotf = zeros(length(T),1);</span>
+<span class="comment">% lonplotf = zeros(length(T),1);</span>
+
+<span class="keyword">for</span> j = 1:length(T)
+    thetag = we*(T(j) - tp*86400);
+    recf = R3(thetag)*traj(j,1:3)';
+    <span class="comment">%recff = R3(thetag)*full(j,1:3)';</span>
+    latplot(j) = asind(recf(3)/norm(recf));
+<span class="comment">%     latplotf(j) = asind(recff(3)/norm(recff));</span>
+    lonplot(j) = atan2d(recf(2),recf(1));
+<span class="comment">%     lonplotf(j) = atan2d(recff(2),recff(1));</span>
+<span class="keyword">end</span>
+
+load <span class="string">earth_coastline.mat</span>
+
+plot(earth_coastline(:,1),earth_coastline(:,2),<span class="string">'k'</span>)
+hold <span class="string">on</span>
+plot(lonplot,latplot, <span class="string">'.r'</span>)
+<span class="comment">% plot(lonplotf,latplotf, '.r')</span>
+axis <span class="string">equal</span>
+xlim([-180,180])
+ylim([-90,90])
+xlabel(<span class="string">'Longitude (degrees)'</span>)
+ylabel(<span class="string">'Latitude (degrees)'</span>)
+title(<span class="string">'Groundtrack Map'</span>)
+</pre><pre class="codeoutput">If given angle related to singularities, put in input 7 (argp).
+</pre><img vspace="5" hspace="5" src="ProjectTask2_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Task 2
+% Here is the code for task 2
+
+mu = 398600.4415;
+j2 = 0.0010826267;
+radEarth = 6378.1363; % km
+a = 6500;
+e = 0.001;
+ta1 = 20; % In Degrees!
+E = @(ta) (2*atan2(sqrt(1-e)*tan(deg2rad(ta)/2),sqrt(1+e)));  % in rad
+E1 = E(ta1);
+lat1 = 30.3; % degrees N
+lon1 = 360 - 120.6; % degrees E
+n = 10;
+lon2 = 360 - 97.7; % degrees E
+lat2 = lat1;
+g = 9.81/1000; % km/s^2
+p = a*(1-e^2); % semilatus rectum
+Per = 2*pi*sqrt(a^3/mu); % Period in seconds
+
+r1 =(p/(1+e*cosd(ta1)));
+V = @ (r) (sqrt(g * radEarth^2 * (2/r - 1/a)));
+V1 = V(r1);
+Vc1 = sqrt(g*radEarth^2/r1);
+
+gamma1 = acosd(sqrt(p/r1))*(Vc1/V1);
+
+we = 2*pi/86164;
+% initialization
+t1 = (Per/(2*pi))*(E1 - e*sin(E1));
+
+lon2e = rad2deg(deg2rad(lon2) + n*we*Per); % lon2e in deg
+
+t2et1 = (Per/360)*(lon2e - lon1); % in deg
+
+% first iteration
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1); % in deg
+
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1; % in deg
+
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+
+az1 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); % in deg
+
+i1 = acosd(sind(az1)*cosd(lat1)); % in deg
+
+% Oblateness Correction (only for first iteration)
+
+nodalreg = ((-1*1.5*sqrt(mu)*j2*radEarth^2)/(((1-e^2)^2)*a^(7/2)))*cosd(i1); %draan/dt
+apsreg = ((-1.5*(sqrt(mu)*j2*radEarth^2))/(((1-e^2)^2)*a^(7/2))) * (2.5*(sind(i1))^2 - 2); %dwdt
+
+delw = rad2deg(apsreg*(n*Per + t2et1)); % in deg
+delraan = rad2deg(nodalreg *(n*Per + t2et1)); %in deg
+
+w = asind(sind(lat1)/sind(i1)) - ta1; % in deg
+
+dellat = (sind(i1)*cosd(w + ta2e) * delw / cosd(lat2));
+dellon = (cosd(i1)*(secd(w + ta2e))^2 * delw)/(1 + (cosd(i1)*tand(w + ta2e))^2) + delraan;
+
+lon2 = lon2 - dellon;
+lat2 = lat2 - dellat;
+
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+
+t2et1 = t2e - t1;
+
+% Oblateness Corrected, Iteration 2
+lon2e = rad2deg(deg2rad(lon2) + n*we*Per);
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1);
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1;
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+az2 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); % in deg
+i2 = acosd(sind(az2)*cosd(lat1)); % in deg
+t2et1 = t2e - t1;
+
+% Iteration 3
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1);
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1;
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+az3 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); % in deg
+i3 = acosd(sind(az3)*cosd(lat1)); % in deg
+t2et1 = t2e - t1;
+
+% Iteration 4
+dellon12e = lon2e - lon1 + rad2deg(we*t2et1);
+ta2e = acosd(sind(lat2)*sind(lat1) + cosd(lat2)*cosd(lat1)*cosd(dellon12e)) + ta1;
+t2e = (Per/(2*pi))*(E(ta2e) - e*sin(E(ta2e)));
+az4 = asind(sind(dellon12e)*cosd(lat2) / sind(ta2e - ta1)); % in deg
+i4 = acosd(sind(az4)*cosd(lat1)); % in deg
+t2et1 = t2e - t1;
+
+% Final Orbit Elements
+
+dellonn1 = atand(sind(lat1)*tand(az3));
+lonnref = lon1 - dellonn1;
+raan = lonnref;
+w = asind(sind(lat1)/sind(i4)) - ta1;
+
+[r,v] = oe2rv(mu,a,e,deg2rad(i4),deg2rad(raan),deg2rad(ta1),deg2rad(w)); % Burnout Position and Velocity!!!
+
+% Orbit Propagation with J2
+tp = 2451545.0; % JD_utc
+time = tp*86400:1:tp*86400 + 10*Per + t2et1;
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+y0 = [r;v];
+[T,traj] = ode45(@j2prop,time,y0,odeoptions);
+%[T,full] = ode45(@fullprop,time,y0,odeoptions);
+
+latplot = zeros(length(T),1);
+lonplot = zeros(length(T),1);
+% latplotf = zeros(length(T),1);
+% lonplotf = zeros(length(T),1);
+
+for j = 1:length(T)
+    thetag = we*(T(j) - tp*86400);
+    recf = R3(thetag)*traj(j,1:3)';
+    %recff = R3(thetag)*full(j,1:3)';
+    latplot(j) = asind(recf(3)/norm(recf));
+%     latplotf(j) = asind(recff(3)/norm(recff));
+    lonplot(j) = atan2d(recf(2),recf(1));
+%     lonplotf(j) = atan2d(recff(2),recff(1));
+end
+
+load earth_coastline.mat
+
+plot(earth_coastline(:,1),earth_coastline(:,2),'k')
+hold on
+plot(lonplot,latplot, '.r')
+% plot(lonplotf,latplotf, '.r')
+axis equal
+xlim([-180,180])
+ylim([-90,90])
+xlabel('Longitude (degrees)')
+ylabel('Latitude (degrees)')
+title('Groundtrack Map')
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,286 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>SD8</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-10-27"><meta name="DC.source" content="SD8.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Problem 5</a></li><li><a href="#2">Problem 6</a></li><li><a href="#3">Problem 7</a></li></ul></div><h2 id="1">Problem 5</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+a = 8433;
+e = .1179;
+i = deg2rad(19);
+raan = deg2rad(310);
+argp = deg2rad(111);
+ta = 0;
+mu = 398600.4415;
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+rmag = norm(r);
+vmag = norm(v);
+h = cross(r,v);
+hmag = norm(h);     <span class="comment">%setup</span>
+p = (hmag^2)/mu;
+rp = p/(1+e);
+raold = p/(1-e);
+ranew = raold+300;
+
+<span class="comment">% deltav = vwant - vhave</span>
+<span class="comment">% The spacecraft is at periapsis, and we want a biggere apoapsis. We will</span>
+<span class="comment">% do the maneuver here. The maneuver will be parallel to the velocity and</span>
+<span class="comment">% perpendicular to the position.</span>
+awant = (ranew+rp)/2;
+vhave = vmag;
+vwant = sqrt(mu*((2/rp)-(1/awant)));
+deltav = abs(vhave - vwant)
+
+dvr = [0 0 0]'
+dvtan = deltav.*(cross(h,r)/(norm(cross(h,r))))
+</pre><pre class="codeoutput">If given angle related to singularities, put in input 7 (argp).
+
+deltav =
+
+    0.0532
+
+
+dvr =
+
+     0
+     0
+     0
+
+
+dvtan =
+
+   -0.0457
+    0.0265
+   -0.0062
+
+</pre><h2 id="2">Problem 6</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+mu = 398600.4415;
+re = 6378.1363;
+nr = 1.991e-7;
+j2 = 0.00108248;
+
+e = [0.1 0.3 0.4 0.5 0.9]';
+
+sma = @(i,e) (( -3*sqrt(mu)*j2*(re^2).*cos(i) )./(2*nr*(1-e.^2).^2) ).^(2/7);
+
+i = deg2rad(95:1:180);
+
+a = sma(i, e);
+p = a.*(1-e.^2);
+rp = p./(1+e);
+
+<span class="keyword">for</span> j = 1:length(a)
+    <span class="keyword">for</span> k = 1:length(a(:,1))
+        <span class="keyword">if</span> rp(k,j) &lt; re
+            a(k,j) = NaN;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+fig = 1;
+figure(fig)
+plot(rad2deg(i),a(1,:))
+hold <span class="string">on</span>
+plot(rad2deg(i),a(2,:))
+plot(rad2deg(i),a(3,:))
+plot(rad2deg(i),a(4,:))
+plot(rad2deg(i),a(5,:))
+xlabel(<span class="string">'Inclination (deg)'</span>)
+ylabel(<span class="string">'Semi-Major Axis (km)'</span>)
+legend({<span class="string">'e = 0.1'</span>,<span class="string">'e = 0.3'</span>,<span class="string">'e = 0.4'</span>,<span class="string">'e = 0.5'</span>,<span class="string">'e = 0.9'</span>},<span class="string">'Location'</span>,<span class="string">'northwest'</span>)
+title(<span class="string">'Semi-Major Axis vs. Inclination for Sun-Synchronous Orbit'</span>)
+</pre><img vspace="5" hspace="5" src="SD8_01.png" alt=""> <h2 id="3">Problem 7</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+mu = 398600.4415;
+re = 6378.1363;
+nr = 1.991e-7;
+j2 = 0.00108248;
+<span class="comment">% Critically inclined angle is found when apsidal regression = 0</span>
+i = deg2rad(116.5650512); <span class="comment">% Critically inclined, must change e and a to make sun-synchronous.</span>
+
+e = 0:0.01:0.99;
+sma = @(i,e) (( -3*sqrt(mu)*j2*(re^2).*cos(i) )./(2*nr*(1-e.^2).^2) ).^(2/7);
+a = sma(i,e);
+
+fig = 2;
+figure(fig)
+plot(a,e)
+xlabel(<span class="string">'Semi-Major Axis (km)'</span>)
+ylabel(<span class="string">'Eccentricity'</span>)
+
+title({<span class="string">'Semi-Major Axis vs. Eccentricity for'</span>;<span class="string">'Sun-Synchronous, Critically Inclined Orbit'</span>})
+</pre><img vspace="5" hspace="5" src="SD8_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Problem 5
+clear all
+clc
+
+a = 8433;
+e = .1179;
+i = deg2rad(19);
+raan = deg2rad(310);
+argp = deg2rad(111);
+ta = 0;
+mu = 398600.4415;
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+rmag = norm(r);
+vmag = norm(v);
+h = cross(r,v);
+hmag = norm(h);     %setup
+p = (hmag^2)/mu;
+rp = p/(1+e);
+raold = p/(1-e);
+ranew = raold+300;
+
+% deltav = vwant - vhave
+% The spacecraft is at periapsis, and we want a biggere apoapsis. We will
+% do the maneuver here. The maneuver will be parallel to the velocity and
+% perpendicular to the position.
+awant = (ranew+rp)/2;
+vhave = vmag;
+vwant = sqrt(mu*((2/rp)-(1/awant)));
+deltav = abs(vhave - vwant)
+
+dvr = [0 0 0]'
+dvtan = deltav.*(cross(h,r)/(norm(cross(h,r))))
+
+%% Problem 6
+clear all
+clc
+
+mu = 398600.4415;
+re = 6378.1363;
+nr = 1.991e-7;
+j2 = 0.00108248;
+
+e = [0.1 0.3 0.4 0.5 0.9]';
+
+sma = @(i,e) (( -3*sqrt(mu)*j2*(re^2).*cos(i) )./(2*nr*(1-e.^2).^2) ).^(2/7);
+
+i = deg2rad(95:1:180);
+
+a = sma(i, e);
+p = a.*(1-e.^2);
+rp = p./(1+e);
+
+for j = 1:length(a)
+    for k = 1:length(a(:,1))
+        if rp(k,j) < re
+            a(k,j) = NaN;
+        end
+    end
+end
+
+fig = 1;
+figure(fig)
+plot(rad2deg(i),a(1,:))
+hold on
+plot(rad2deg(i),a(2,:))
+plot(rad2deg(i),a(3,:))
+plot(rad2deg(i),a(4,:))
+plot(rad2deg(i),a(5,:))
+xlabel('Inclination (deg)')
+ylabel('Semi-Major Axis (km)')
+legend({'e = 0.1','e = 0.3','e = 0.4','e = 0.5','e = 0.9'},'Location','northwest')
+title('Semi-Major Axis vs. Inclination for Sun-Synchronous Orbit')
+
+
+%% Problem 7
+clear all
+clc
+
+mu = 398600.4415;
+re = 6378.1363;
+nr = 1.991e-7;
+j2 = 0.00108248;
+% Critically inclined angle is found when apsidal regression = 0
+i = deg2rad(116.5650512); % Critically inclined, must change e and a to make sun-synchronous.
+
+e = 0:0.01:0.99;
+sma = @(i,e) (( -3*sqrt(mu)*j2*(re^2).*cos(i) )./(2*nr*(1-e.^2).^2) ).^(2/7);
+a = sma(i,e);
+
+fig = 2;
+figure(fig)
+plot(a,e)
+xlabel('Semi-Major Axis (km)')
+ylabel('Eccentricity')
+
+title({'Semi-Major Axis vs. Eccentricity for';'Sun-Synchronous, Critically Inclined Orbit'})
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

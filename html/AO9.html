@@ -1,0 +1,368 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Problem 4</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-04-28"><meta name="DC.source" content="AO9.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Problem 4</h1><pre class="codeinput">clear
+clc
+
+mu = 398600.4415;
+a = 7000;
+e = 0;
+i = deg2rad(75);
+raan = 0;
+argl = 0;
+
+rhoi = [25 0 0]'; <span class="comment">% in Inertial RSW</span>
+rhodi = [-1 0 0]'; <span class="comment">% "</span>
+
+[rt,vt] = oe2rv(mu,a,e,i,raan,0,argl); <span class="comment">% in ijk frame</span>
+
+R = rt./norm(rt);
+c = cross(rt,vt);
+W = c./norm(c);
+S = cross(W,R);
+
+Qrswijk = [R S W];
+
+<span class="comment">% 4.1</span>
+rhoijk = Qrswijk*rhoi; <span class="comment">% Changed to ijk and displayed as answers to 4.1 (m)</span>
+rhodijk = Qrswijk*rhodi;
+disp(<span class="string">'4.1 The inertial relative position in ijk is'</span>);
+disp(rhoijk);
+disp(<span class="string">'4.1 The inertial relative velocity in ijk is'</span>);
+disp(rhodijk);
+
+
+
+<span class="comment">% 4.2</span>
+omega = norm(c)/(norm(rt)^2);
+omega = [0 0 omega]'; <span class="comment">% RSW</span>
+rhodni = rhodi - (cross(omega,rhoi)); <span class="comment">% Non-inertial relative velocity in RSW (m)</span>
+disp(<span class="string">'4.2 The non-inertial relative velocity in RSW is'</span>);
+disp(rhodni);
+
+<span class="comment">% 4.3</span>
+P = 2*pi*sqrt(a^3/mu);
+time = 0:20:3*P;
+y0t = [rt; vt]; <span class="comment">% initial conditions for target</span>
+y0c = y0t + 0.001.*[rhoijk; rhodijk]; <span class="comment">% initial conditions for chaser</span>
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+[~,Yt] = ode45(@twobody,time,y0t,odeoptions); <span class="comment">% propagating target orbit</span>
+[t,Yc] = ode45(@twobody,time,y0c,odeoptions); <span class="comment">% propagating chaser orbit</span>
+
+<span class="keyword">for</span> i = 1:length(time)
+    Ytr = Yt(:,1:3); <span class="comment">% Separating position vectors out</span>
+    Ycr = Yc(:,1:3);
+    Ytv = Yt(:,4:6);
+    Ycv = Yc(:,4:6);
+
+    R = Ytr(i,1:3)./norm(Ytr(i,1:3));
+    c = cross(Ytr(i,1:3),Ytv(i,1:3));
+    W = c./norm(c);
+    S = cross(W,R);
+
+    Qrswijk = [R' S' W'];
+
+
+    Ytrrsw(i,:) = Qrswijk'*Ytr(i,:)'; <span class="comment">% ijk to rsw for each position of target</span>
+    Ycrrsw(i,:) = Qrswijk'*Ycr(i,:)'; <span class="comment">% ijk to rsw for each position of target</span>
+<span class="keyword">end</span>
+
+x = Ycrrsw(:,1) - Ytrrsw(:,1); <span class="comment">% Subtracting R components</span>
+y = Ycrrsw(:,2) - Ytrrsw(:,2); <span class="comment">% Subtracting S components</span>
+x = x*1000; <span class="comment">% km to meters</span>
+y = y*1000;
+
+figure(1);
+scatter(y,x)
+xlabel(<span class="string">'y in meters'</span>)
+ylabel(<span class="string">'x in meters'</span>)
+
+<span class="comment">% 4.4</span>
+po = rhoi;
+pdo = rhodni;
+n = 2*pi/P;
+pt = zeros(3,length(time));
+dt = zeros(3,length(time));
+i = 1;
+<span class="keyword">for</span> t = 0:20:3*P
+
+    phipp = [4-3*cos(n*t) 0 0;
+             6*(sin(n*t)-n*t) 1 0;
+             0 0 cos(n*t)];
+    phipd = [sin(n*t)/n 2*(1-cos(n*t))/n 0;
+             2*(cos(n*t)-1)/n (4*sin(n*t)-3*n*t)/n 0;
+             0 0 sin(n*t)/n];
+    phidp = [3*n*sin(n*t) 0 0;
+             6*n*(cos(n*t)-1) 0 0;
+             0 0 -n*sin(n*t)];
+    phidd = [cos(n*t) 2*sin(n*t) 0;
+             -2*sin(n*t) 4*cos(n*t)-3 0;
+             0 0 cos(n*t)];
+
+    pt(1:3,i) = phipp*po + phipd*pdo; <span class="comment">% solving for relative position using CW</span>
+    dt(1:3,i) = phidp*po + phidd*pdo; <span class="comment">% ended up being useless, oh well</span>
+
+
+    i = i+1;
+<span class="keyword">end</span>
+
+pt = pt';
+
+e = (Ycrrsw - Ytrrsw)*1000 - pt;
+
+figure(2);
+subplot(3,1,1)
+plot(time, e(:,1))
+title(<span class="string">'Error in R component over time'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'\rho _{R}'</span>)
+hold <span class="string">on</span>
+
+subplot(3,1,2)
+plot(time, e(:,2))
+title(<span class="string">'Error in S component over time'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'\rho _{S}'</span>)
+
+subplot(3,1,3)
+plot(time, e(:,3))
+title(<span class="string">'Error in W component over time'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'\rho _{W}'</span>)
+
+<span class="comment">% 4.5</span>
+
+ef = norm(e(length(e),:));
+message = [<span class="string">'4.5 The final magnitude of error is '</span>, num2str(ef), <span class="string">' meters.'</span>];
+disp(message);
+
+<span class="comment">% 4.6</span>
+
+disp(<span class="string">'4.6 The CW equations are quite accurate in this case. The error is less than a quarter of a percent of the magnitude of the relative position vector.'</span>);
+</pre><pre class="codeoutput">4.1 The inertial relative position in ijk is
+    25
+     0
+     0
+
+4.1 The inertial relative velocity in ijk is
+    -1
+     0
+     0
+
+4.2 The non-inertial relative velocity in RSW is
+   -1.0000
+   -0.0270
+         0
+
+4.5 The final magnitude of error is 3.4826 meters.
+4.6 The CW equations are quite accurate in this case. The error is less than a quarter of a percent of the magnitude of the relative position vector.
+</pre><img vspace="5" hspace="5" src="AO9_01.png" alt=""> <img vspace="5" hspace="5" src="AO9_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Problem 4
+
+clear 
+clc
+
+mu = 398600.4415;
+a = 7000;
+e = 0;
+i = deg2rad(75);
+raan = 0;
+argl = 0;
+
+rhoi = [25 0 0]'; % in Inertial RSW
+rhodi = [-1 0 0]'; % "
+
+[rt,vt] = oe2rv(mu,a,e,i,raan,0,argl); % in ijk frame
+
+R = rt./norm(rt);
+c = cross(rt,vt);
+W = c./norm(c);
+S = cross(W,R);
+
+Qrswijk = [R S W];
+
+% 4.1
+rhoijk = Qrswijk*rhoi; % Changed to ijk and displayed as answers to 4.1 (m)
+rhodijk = Qrswijk*rhodi;
+disp('4.1 The inertial relative position in ijk is');
+disp(rhoijk);
+disp('4.1 The inertial relative velocity in ijk is');
+disp(rhodijk);
+
+
+
+% 4.2
+omega = norm(c)/(norm(rt)^2); 
+omega = [0 0 omega]'; % RSW
+rhodni = rhodi - (cross(omega,rhoi)); % Non-inertial relative velocity in RSW (m)
+disp('4.2 The non-inertial relative velocity in RSW is');
+disp(rhodni);
+
+% 4.3
+P = 2*pi*sqrt(a^3/mu);
+time = 0:20:3*P;
+y0t = [rt; vt]; % initial conditions for target
+y0c = y0t + 0.001.*[rhoijk; rhodijk]; % initial conditions for chaser
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+[~,Yt] = ode45(@twobody,time,y0t,odeoptions); % propagating target orbit
+[t,Yc] = ode45(@twobody,time,y0c,odeoptions); % propagating chaser orbit
+
+for i = 1:length(time)
+    Ytr = Yt(:,1:3); % Separating position vectors out
+    Ycr = Yc(:,1:3);
+    Ytv = Yt(:,4:6);
+    Ycv = Yc(:,4:6);
+
+    R = Ytr(i,1:3)./norm(Ytr(i,1:3));
+    c = cross(Ytr(i,1:3),Ytv(i,1:3));
+    W = c./norm(c);
+    S = cross(W,R);
+
+    Qrswijk = [R' S' W'];
+
+
+    Ytrrsw(i,:) = Qrswijk'*Ytr(i,:)'; % ijk to rsw for each position of target
+    Ycrrsw(i,:) = Qrswijk'*Ycr(i,:)'; % ijk to rsw for each position of target
+end
+
+x = Ycrrsw(:,1) - Ytrrsw(:,1); % Subtracting R components
+y = Ycrrsw(:,2) - Ytrrsw(:,2); % Subtracting S components
+x = x*1000; % km to meters
+y = y*1000;
+
+figure(1);
+scatter(y,x)
+xlabel('y in meters')
+ylabel('x in meters')
+
+% 4.4 
+po = rhoi;
+pdo = rhodni;
+n = 2*pi/P;
+pt = zeros(3,length(time));
+dt = zeros(3,length(time));
+i = 1;
+for t = 0:20:3*P
+    
+    phipp = [4-3*cos(n*t) 0 0;
+             6*(sin(n*t)-n*t) 1 0;
+             0 0 cos(n*t)];
+    phipd = [sin(n*t)/n 2*(1-cos(n*t))/n 0;
+             2*(cos(n*t)-1)/n (4*sin(n*t)-3*n*t)/n 0;
+             0 0 sin(n*t)/n];
+    phidp = [3*n*sin(n*t) 0 0;
+             6*n*(cos(n*t)-1) 0 0;
+             0 0 -n*sin(n*t)];
+    phidd = [cos(n*t) 2*sin(n*t) 0;
+             -2*sin(n*t) 4*cos(n*t)-3 0;
+             0 0 cos(n*t)];
+
+    pt(1:3,i) = phipp*po + phipd*pdo; % solving for relative position using CW
+    dt(1:3,i) = phidp*po + phidd*pdo; % ended up being useless, oh well
+
+    
+    i = i+1;
+end
+
+pt = pt';
+
+e = (Ycrrsw - Ytrrsw)*1000 - pt;
+
+figure(2);
+subplot(3,1,1)
+plot(time, e(:,1))
+title('Error in R component over time')
+xlabel('Time (s)')
+ylabel('\rho _{R}')
+hold on
+
+subplot(3,1,2)
+plot(time, e(:,2))
+title('Error in S component over time')
+xlabel('Time (s)')
+ylabel('\rho _{S}')
+
+subplot(3,1,3)
+plot(time, e(:,3))
+title('Error in W component over time')
+xlabel('Time (s)')
+ylabel('\rho _{W}')
+
+% 4.5
+
+ef = norm(e(length(e),:));
+message = ['4.5 The final magnitude of error is ', num2str(ef), ' meters.'];
+disp(message);
+
+% 4.6
+
+disp('4.6 The CW equations are quite accurate in this case. The error is less than a quarter of a percent of the magnitude of the relative position vector.');
+##### SOURCE END #####
+--></body></html>

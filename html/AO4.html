@@ -1,0 +1,442 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>AO4</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-02-25"><meta name="DC.source" content="AO4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Problem 3</a></li><li><a href="#2">Problem 4</a></li><li><a href="#3">Problem 5</a></li><li><a href="#4">Extra Credit</a></li></ul></div><h2 id="1">Problem 3</h2><pre class="codeinput"><span class="comment">% 1D perturbation</span>
+re = 0;
+rs = 6600:100:50000;
+rsun = 149.6E6;
+rm = 384.4E3;
+
+musun = 1.327E11;
+mum = 4.902E3;
+
+atbsun = musun.*((1./(rsun - rs).^2)-(1/(rsun - re).^2));
+atbm = mum.*((1./(rm - rs).^2)-(1/(rm - re).^2));
+
+atbtot = atbsun + atbm; <span class="comment">% in km/s^2</span>
+
+atbtot = atbtot*1000; <span class="comment">% in m/s^2</span>
+figure(1);
+plot(rs, atbtot)
+<span class="comment">% hold  on % Here's how I found the moon had a higher effect than the Sun.</span>
+<span class="comment">% plot(rs, atbm*1000)</span>
+<span class="comment">% plot(rs,atbsun*1000)</span>
+<span class="comment">% legend('atbtot','atbm', 'atbsun')</span>
+xlabel(<span class="string">'Spacecraft distance in km'</span>)
+ylabel(<span class="string">'Third Body Perturbation in m/s^2'</span>)
+
+disp(<span class="string">'The moon has a stronger perturbation than the sun.'</span>);
+</pre><pre class="codeoutput">The moon has a stronger perturbation than the sun.
+</pre><img vspace="5" hspace="5" src="AO4_01.png" alt=""> <h2 id="2">Problem 4</h2><pre class="codeinput"><span class="comment">% 4.1</span>
+jdutc = 2451545.0;
+jdut1 = jdutc2jdut1(jdutc, 0);
+
+Tut1 = ((jdut1 - 2451545)/36525);
+
+mel = 280.460 + 36000.771*Tut1;
+
+ma = 357.52772333 + 35999.0534*Tut1;
+
+el = mel + 1.914666471*sin(deg2rad(ma)) + 0.019994643*sin(deg2rad(2*ma));
+
+r = 1.000140612 - 0.016708617*cos(deg2rad(ma)) - 0.000139589*cos(2*deg2rad(ma));
+
+obe = 23.439291 - 0.0130042*Tut1;
+
+rtod = [r*cos(deg2rad(el))  r*cos(deg2rad(obe))*sin(deg2rad(el)) r*sin(deg2rad(obe))*sin(deg2rad(el))]';
+
+rmod = rtod;
+
+zeta = 206.2181*Tut1 + 0.30188*(Tut1^2) + 0.017998*(Tut1^3); <span class="comment">% in arcseconds</span>
+theta = 2004.3109*Tut1 - 0.42665*(Tut1^2) - 0.041833*(Tut1^3);
+z = 2306.2181*Tut1 + 1.09468*(Tut1^2) + 0.018203*(Tut1^3);
+
+zeta = zeta / 3600;
+theta = theta / 3600;
+z = z / 3600;
+
+Qtodgcrf = R3(deg2rad(zeta))*R2(deg2rad(-theta))*R3(deg2rad(z));
+
+rgcrf = Qtodgcrf*rmod;
+
+disp(<span class="string">'This is the GCRF position of the Sun at 2457793.5 UTC:'</span>);
+disp(rgcrf);
+
+<span class="comment">% 4.2</span>
+
+clear <span class="string">all</span>
+clc
+
+jdutc = 2457793.5:0.25:(2457793.5+365.25);
+prop = zeros(3,length(jdutc));
+<span class="keyword">for</span> i = 1:length(jdutc)
+    prop(1:3,i) = sun(jdutc(i));
+<span class="keyword">end</span>
+
+t = jdutc - 2457793.5;
+
+figure(2);
+subplot(3,1,1)
+plot(t, prop(1,:))
+title(<span class="string">'i Component vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'Distance (AU)'</span>)
+hold <span class="string">on</span>
+
+subplot(3,1,2)
+plot(t, prop(2,:))
+title(<span class="string">'j Component vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'Distance (AU)'</span>)
+
+subplot(3,1,3)
+plot(t, prop(3,:))
+title(<span class="string">'k Component vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'Distance (AU)'</span>)
+</pre><pre class="codeoutput">This is the GCRF position of the Sun at 2457793.5 UTC:
+    0.1771
+   -0.8874
+   -0.3847
+
+</pre><img vspace="5" hspace="5" src="AO4_02.png" alt=""> <h2 id="3">Problem 5</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+
+r = [39066 221558 268116];
+v = [-1.19828 0.211289 0];
+mu = 398600;
+time = 2451545:0.5:(2451545+365.25);
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+y0 = [r v]';
+[T,Y] = ode45(@threebodysun,time,y0,odeoptions);
+
+r = Y(:,1:3);
+v = Y(:,4:6);
+<span class="keyword">for</span> j = 1:length(Y)
+    [a(j),emag(j),i(j),raan(j),argp(j),ta(j)] = rv2oe(r(j,:),v(j,:),mu);
+<span class="keyword">end</span>
+
+time = time - 2451545;
+
+figure(3);
+
+subplot(5,1,1)
+plot(time, a)
+title(<span class="string">'Semimajor Axis vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'a (km)'</span>)
+hold <span class="string">on</span>
+
+subplot(5,1,2)
+plot(time, argp)
+title(<span class="string">'Argument of Periapsis vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'ArgP (rad)'</span>)
+
+subplot(5,1,3)
+plot(time, emag)
+title(<span class="string">'Eccentricity vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'e'</span>)
+
+subplot(5,1,4)
+plot(time, i)
+title(<span class="string">'Inclination vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'i (rad)'</span>)
+
+subplot(5,1,5)
+plot(time, raan)
+title(<span class="string">'RAAN vs. Time'</span>)
+xlabel(<span class="string">'Time (Days)'</span>)
+ylabel(<span class="string">'RAAN (rad)'</span>)
+</pre><img vspace="5" hspace="5" src="AO4_03.png" alt=""> <h2 id="4">Extra Credit</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+r = [39066 221558 268116];
+v = [-1.19828 0.211289 0];
+mu = 398600;
+time = 2451545:0.5:(2451545+(15*(365.25)));
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+y0 = [r v]';
+[T,Y] = ode45(@threebodysun,time,y0,odeoptions);
+
+r = Y(:,1:3);
+v = Y(:,4:6);
+
+h = cross(r,v);
+time = (time - 2451545)/365.25;
+
+figure(4);
+
+subplot(2,1,1)
+plot(time,(h(:,1) - h(1,1)))
+xlabel(<span class="string">'Time (Years)'</span>)
+ylabel(<span class="string">'hi'</span>)
+title(<span class="string">'i Component of h over 15 years'</span>)
+hold <span class="string">on</span>
+
+subplot(2,1,2)
+plot(time,(h(:,2) - h(1,2)))
+xlabel(<span class="string">'Time (Years)'</span>)
+ylabel(<span class="string">'hj'</span>)
+title(<span class="string">'j Component of h over 15 years'</span>)
+</pre><img vspace="5" hspace="5" src="AO4_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Problem 3
+
+% 1D perturbation
+re = 0;
+rs = 6600:100:50000;
+rsun = 149.6E6;
+rm = 384.4E3;
+
+musun = 1.327E11;
+mum = 4.902E3;
+
+atbsun = musun.*((1./(rsun - rs).^2)-(1/(rsun - re).^2));
+atbm = mum.*((1./(rm - rs).^2)-(1/(rm - re).^2));
+
+atbtot = atbsun + atbm; % in km/s^2
+
+atbtot = atbtot*1000; % in m/s^2
+figure(1);
+plot(rs, atbtot)
+% hold  on % Here's how I found the moon had a higher effect than the Sun.
+% plot(rs, atbm*1000)
+% plot(rs,atbsun*1000)
+% legend('atbtot','atbm', 'atbsun')
+xlabel('Spacecraft distance in km')
+ylabel('Third Body Perturbation in m/s^2')
+
+disp('The moon has a stronger perturbation than the sun.');
+
+%% Problem 4
+
+% 4.1
+jdutc = 2451545.0;
+jdut1 = jdutc2jdut1(jdutc, 0);
+
+Tut1 = ((jdut1 - 2451545)/36525);
+
+mel = 280.460 + 36000.771*Tut1;
+
+ma = 357.52772333 + 35999.0534*Tut1;
+
+el = mel + 1.914666471*sin(deg2rad(ma)) + 0.019994643*sin(deg2rad(2*ma));
+
+r = 1.000140612 - 0.016708617*cos(deg2rad(ma)) - 0.000139589*cos(2*deg2rad(ma));
+
+obe = 23.439291 - 0.0130042*Tut1;
+
+rtod = [r*cos(deg2rad(el))  r*cos(deg2rad(obe))*sin(deg2rad(el)) r*sin(deg2rad(obe))*sin(deg2rad(el))]';
+
+rmod = rtod;
+
+zeta = 206.2181*Tut1 + 0.30188*(Tut1^2) + 0.017998*(Tut1^3); % in arcseconds
+theta = 2004.3109*Tut1 - 0.42665*(Tut1^2) - 0.041833*(Tut1^3);
+z = 2306.2181*Tut1 + 1.09468*(Tut1^2) + 0.018203*(Tut1^3);
+
+zeta = zeta / 3600;
+theta = theta / 3600;
+z = z / 3600;
+
+Qtodgcrf = R3(deg2rad(zeta))*R2(deg2rad(-theta))*R3(deg2rad(z));
+
+rgcrf = Qtodgcrf*rmod;
+
+disp('This is the GCRF position of the Sun at 2457793.5 UTC:');
+disp(rgcrf);
+
+% 4.2
+
+clear all
+clc
+
+jdutc = 2457793.5:0.25:(2457793.5+365.25);
+prop = zeros(3,length(jdutc));
+for i = 1:length(jdutc)
+    prop(1:3,i) = sun(jdutc(i));
+end
+
+t = jdutc - 2457793.5;
+
+figure(2);
+subplot(3,1,1)
+plot(t, prop(1,:))
+title('i Component vs. Time')
+xlabel('Time (Days)')
+ylabel('Distance (AU)')
+hold on
+
+subplot(3,1,2)
+plot(t, prop(2,:))
+title('j Component vs. Time')
+xlabel('Time (Days)')
+ylabel('Distance (AU)')
+
+subplot(3,1,3)
+plot(t, prop(3,:))
+title('k Component vs. Time')
+xlabel('Time (Days)')
+ylabel('Distance (AU)')
+
+
+%% Problem 5
+clear all
+clc
+
+
+r = [39066 221558 268116];
+v = [-1.19828 0.211289 0];
+mu = 398600;
+time = 2451545:0.5:(2451545+365.25);
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+y0 = [r v]';
+[T,Y] = ode45(@threebodysun,time,y0,odeoptions);
+
+r = Y(:,1:3);
+v = Y(:,4:6);
+for j = 1:length(Y)
+    [a(j),emag(j),i(j),raan(j),argp(j),ta(j)] = rv2oe(r(j,:),v(j,:),mu);
+end
+
+time = time - 2451545;
+
+figure(3);
+
+subplot(5,1,1)
+plot(time, a)
+title('Semimajor Axis vs. Time')
+xlabel('Time (Days)')
+ylabel('a (km)')
+hold on
+
+subplot(5,1,2)
+plot(time, argp)
+title('Argument of Periapsis vs. Time')
+xlabel('Time (Days)')
+ylabel('ArgP (rad)')
+
+subplot(5,1,3)
+plot(time, emag)
+title('Eccentricity vs. Time')
+xlabel('Time (Days)')
+ylabel('e')
+
+subplot(5,1,4)
+plot(time, i)
+title('Inclination vs. Time')
+xlabel('Time (Days)')
+ylabel('i (rad)')
+
+subplot(5,1,5)
+plot(time, raan)
+title('RAAN vs. Time')
+xlabel('Time (Days)')
+ylabel('RAAN (rad)')
+
+%% Extra Credit
+clear all
+clc
+r = [39066 221558 268116];
+v = [-1.19828 0.211289 0];
+mu = 398600;
+time = 2451545:0.5:(2451545+(15*(365.25)));
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+y0 = [r v]';
+[T,Y] = ode45(@threebodysun,time,y0,odeoptions);
+
+r = Y(:,1:3);
+v = Y(:,4:6);
+
+h = cross(r,v);
+time = (time - 2451545)/365.25;
+
+figure(4);
+
+subplot(2,1,1)
+plot(time,(h(:,1) - h(1,1)))
+xlabel('Time (Years)')
+ylabel('hi')
+title('i Component of h over 15 years')
+hold on
+
+subplot(2,1,2)
+plot(time,(h(:,2) - h(1,2)))
+xlabel('Time (Years)')
+ylabel('hj')
+title('j Component of h over 15 years')
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

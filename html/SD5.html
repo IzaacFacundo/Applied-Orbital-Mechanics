@@ -1,0 +1,577 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>SD5</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-09-29"><meta name="DC.source" content="SD5.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Problem 1</a></li><li><a href="#2">Problem 3</a></li><li><a href="#3">Problem 4</a></li></ul></div><h2 id="1">Problem 1</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+<span class="comment">% 1.1</span>
+
+re = 1;
+e = 0.25000;
+a = 2*re;
+mu = 398600.4415;
+p = a*(1-e^2);
+ftheta = @ (theta) (sin(theta)*p/(1+e*cos(theta))-re);
+syms <span class="string">theta</span>;
+dftheta = matlabFunction(diff(ftheta(theta)));
+
+thetaold = pi;
+
+<span class="keyword">for</span> i = 1:3
+    thetanew = thetaold - (ftheta(thetaold)/dftheta(thetaold));
+    thetaold = thetanew;
+<span class="keyword">end</span>
+
+mes = [<span class="string">'The satellite enters the shadow of the Earth at '</span>, num2str(thetaold), <span class="string">' radians.'</span>];
+disp(mes);
+<span class="comment">% 1.2</span>
+
+<span class="comment">% Since the orbit is symmetrical, the satellite exits the shadow of the</span>
+<span class="comment">% Earth on the opposite side of the apse line.</span>
+
+thetaexit = 2*pi-thetaold;
+mes = [<span class="string">'The satellite exits the shadow of the Earth at '</span>, num2str(thetaexit), <span class="string">' radians.'</span>];
+disp(mes);
+
+<span class="comment">% 1.3</span>
+
+<span class="comment">% Setting tp as 0 for sinplicity.</span>
+
+thetaenter = thetaold;
+Eenter = 2*atan2(sqrt(1-e)*tan(thetaenter/2),sqrt(1+e));
+Eexit = 2*atan2(sqrt(1-e)*tan(thetaexit/2),sqrt(1+e));
+
+Meenter = Eenter - e*sin(Eenter);
+Meexit = 2*pi - Meenter;
+
+n = 2*pi/p;
+
+tenter = Meenter/n;
+texit = Meexit/n;
+
+tis = texit - tenter;
+
+mes = [<span class="string">'The satellite is in the shadow of the Earth for '</span>, num2str(tis), <span class="string">' TU.'</span>];
+disp(mes);
+</pre><pre class="codeoutput">The satellite enters the shadow of the Earth at 2.7171 radians.
+The satellite exits the shadow of the Earth at 3.5661 radians.
+The satellite is in the shadow of the Earth for 0.40091 TU.
+</pre><h2 id="2">Problem 3</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+<span class="comment">% 3.1</span>
+mu = 398600.4415;
+t0 = 0;
+r = [-5357 20459 -2105]; <span class="comment">%km</span>
+v = [-5.1725 0.3792 0.2882]; <span class="comment">%km/s</span>
+h = cross(r,v);
+rmag = norm(r);
+vmag = norm(v);
+hmag = norm(h);
+p = (hmag^2)/mu;
+energy = (vmag^2)/2 - mu/rmag;
+
+<span class="keyword">if</span> energy &lt; 0
+    mes = (<span class="string">'The orbit is elliptical!'</span>);
+    disp(mes);
+<span class="keyword">else</span>
+    mes = (<span class="string">'The orbit is hyperbolic'</span>);
+    disp(mes);
+<span class="keyword">end</span>
+
+<span class="comment">% 3.2</span>
+
+<span class="comment">% Since the orbit is elliptical, we can use another equation for energy to</span>
+<span class="comment">% find ellipse.</span>
+
+e = sqrt(1+2*energy*(hmag^2/mu^2));
+truea = acos(((p/rmag)-1)/e);
+eccea = 2*atan2(sqrt(1-e)*tan(truea/2),sqrt(1+e));
+meana = eccea - e*sin(eccea);
+
+mes = [<span class="string">'The true, eccentric, and mean anomalies are (respectively): '</span>, num2str(truea), <span class="string">', '</span>, num2str(eccea), <span class="string">', and '</span>, num2str(meana)];
+disp(mes);
+
+<span class="comment">% 3.3</span>
+
+<span class="comment">% meana = n(t-tp)</span>
+<span class="comment">% t = 0</span>
+a = (mu/((2*pi/p)^2))^(1/3);
+n = sqrt(mu/a^3);
+
+tp = -meana/n;
+
+mes = [<span class="string">'The time of periapsis passage for this orbit is '</span>, num2str(tp), <span class="string">' seconds.'</span>];
+disp(mes);
+
+<span class="comment">% 3.4</span>
+
+per = 2*pi*(sqrt(a^3/mu));
+t = 0:500:26000;
+[trueav,ecceav,meanav] = propogate(t,n,e,tp);
+T = t./3600;
+rv = p./(1+e.*cos(trueav));
+vv = sqrt(2*(energy+(mu./rv)));
+
+fig = 1;
+figure(fig);
+subplot(3,1,1)
+plot(T,trueav)
+title(<span class="string">'True Anomaly vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'Radians'</span>)
+hold <span class="string">on</span>
+subplot(3,1,2)
+plot(T,rv)
+title(<span class="string">'Position vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'Kilometers'</span>)
+subplot(3,1,3)
+plot(T,vv)
+title(<span class="string">'Velocity vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'Kilometers per second'</span>)
+
+result = find(t==10000);
+ta10 = trueav(result);
+
+mes = [<span class="string">'The true anomaly at 10000 seconds is '</span>, num2str(ta10), <span class="string">' radians.'</span>];
+disp(mes);
+
+<span class="comment">% 3.5</span>
+hold <span class="string">off</span>
+energyv = (vv.^2)./2 - mu./rv;
+energydiff = energyv - energy;
+
+fig = fig + 1;
+figure(fig)
+plot(T,energydiff)
+title(<span class="string">'Change in Specific Energy vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'J/kg'</span>)
+
+
+mes = [<span class="string">'Since the change in specific energy at any point in time over the course of the orbit is miniscule, my propogations seem to be accurate.'</span>];
+disp(mes);
+</pre><pre class="codeoutput">The orbit is elliptical!
+The true, eccentric, and mean anomalies are (respectively): 0.97031, 0.57421, and 0.29044
+The time of periapsis passage for this orbit is -1272.4281 seconds.
+The orbit is elliptical!
+The true anomaly at 10000 seconds is 2.929 radians.
+Since the change in specific energy at any point in time over the course of the orbit is miniscule, my propogations seem to be accurate.
+</pre><img vspace="5" hspace="5" src="SD5_01.png" alt=""> <img vspace="5" hspace="5" src="SD5_02.png" alt=""> <h2 id="3">Problem 4</h2><pre class="codeinput">clear <span class="string">all</span>
+clc
+
+<span class="comment">% 4.1</span>
+mu = 398600.4415;
+r = [-5357 20459 0];
+v = [0 2.4559 24.5587];
+h = cross(r,v);
+rmag = norm(r);
+vmag = norm(v);
+hmag = norm(h);
+p = (hmag^2)/mu;
+energy = (vmag^2)/2 - mu/rmag;
+
+<span class="keyword">if</span> energy &lt; 0
+    mes = (<span class="string">'The orbit is elliptical!'</span>);
+    disp(mes);
+<span class="keyword">else</span>
+    mes = (<span class="string">'The orbit is hyperbolic!'</span>);
+    disp(mes);
+<span class="keyword">end</span>
+
+<span class="comment">% 4.2</span>
+
+e = sqrt(1+2*energy*(hmag^2/mu^2));
+truea = acos(((p/rmag)-1)/e);
+eccea = 2*atanh(sqrt(e-1)*tan(truea/2)/sqrt(1+e));
+meana = eccea - e*sinh(eccea);
+
+mes = [<span class="string">'The true, eccentric, and mean anomalies are (respectively): '</span>, num2str(truea), <span class="string">', '</span>, num2str(eccea), <span class="string">', and '</span>, num2str(meana)];
+disp(mes);
+
+<span class="comment">% 4.3</span>
+
+<span class="comment">% meana = n(t-tp)</span>
+<span class="comment">% t = 0</span>
+a = p/(e^2-1);
+
+
+tp = (-(mu/(hmag*p))*((e^2-1)^(3/2)))/meana;
+
+mes = [<span class="string">'The time of periapsis passage for this orbit is '</span>, num2str(tp), <span class="string">' seconds.'</span>];
+disp(mes);
+
+<span class="comment">% 4.4</span>
+
+t = -20000:500:20000;
+
+[trueav,ecceav,meanav] = propogateh(t,mu,hmag,e,tp);
+T = t./3600;
+rv = p./(1+e.*cos(trueav));
+vv = sqrt((2*mu./rv)+(mu/a));
+
+fig = 3;
+figure(fig);
+subplot(3,1,1)
+plot(T,trueav)
+title(<span class="string">'True Anomaly vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'Radians'</span>)
+hold <span class="string">on</span>
+subplot(3,1,2)
+plot(T,rv)
+title(<span class="string">'Position vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'Kilometers'</span>)
+subplot(3,1,3)
+plot(T,vv)
+title(<span class="string">'Velocity vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'Kilometers per second'</span>)
+
+result = find(t==10000);
+ta10 = trueav(result);
+
+mes = [<span class="string">'The true anomaly at 10000 seconds is '</span>, num2str(ta10), <span class="string">' radians.'</span>];
+disp(mes);
+
+<span class="comment">% 4.5</span>
+
+hold <span class="string">off</span>
+energyv = (vv.^2)./2 - mu./rv;
+energydiff = energyv - energy;
+
+fig = fig + 1;
+figure(fig)
+plot(T,energydiff)
+title(<span class="string">'Change in Specific Energy vs. Time'</span>)
+xlabel(<span class="string">'Hours'</span>)
+ylabel(<span class="string">'J/kg'</span>)
+
+mes = (<span class="string">'Since the change in specific energy at any point in time over the course of the orbit is miniscule, my propogations seem to be accurate. They are less accurate around periapsis, but they are nonetheless accurate.'</span>);
+disp(mes);
+</pre><pre class="codeoutput">The orbit is hyperbolic!
+The true, eccentric, and mean anomalies are (respectively): 0.099497, 0.096509, and -2.9169
+The time of periapsis passage for this orbit is 0.01175 seconds.
+The true anomaly at 10000 seconds is 1.6029 radians.
+Since the change in specific energy at any point in time over the course of the orbit is miniscule, my propogations seem to be accurate. They are less accurate around periapsis, but they are nonetheless accurate.
+</pre><img vspace="5" hspace="5" src="SD5_03.png" alt=""> <img vspace="5" hspace="5" src="SD5_04.png" alt=""> <img vspace="5" hspace="5" src="SD5_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Problem 1
+clear all
+clc
+
+% 1.1 
+
+re = 1;
+e = 0.25000;
+a = 2*re;
+mu = 398600.4415;
+p = a*(1-e^2);
+ftheta = @ (theta) (sin(theta)*p/(1+e*cos(theta))-re);
+syms theta;
+dftheta = matlabFunction(diff(ftheta(theta)));
+
+thetaold = pi;
+
+for i = 1:3
+    thetanew = thetaold - (ftheta(thetaold)/dftheta(thetaold));
+    thetaold = thetanew;
+end
+
+mes = ['The satellite enters the shadow of the Earth at ', num2str(thetaold), ' radians.'];
+disp(mes);
+% 1.2
+
+% Since the orbit is symmetrical, the satellite exits the shadow of the
+% Earth on the opposite side of the apse line.
+
+thetaexit = 2*pi-thetaold;
+mes = ['The satellite exits the shadow of the Earth at ', num2str(thetaexit), ' radians.'];
+disp(mes);
+
+% 1.3
+
+% Setting tp as 0 for sinplicity.
+
+thetaenter = thetaold;
+Eenter = 2*atan2(sqrt(1-e)*tan(thetaenter/2),sqrt(1+e));
+Eexit = 2*atan2(sqrt(1-e)*tan(thetaexit/2),sqrt(1+e));
+
+Meenter = Eenter - e*sin(Eenter);
+Meexit = 2*pi - Meenter;
+
+n = 2*pi/p;
+
+tenter = Meenter/n;
+texit = Meexit/n;
+
+tis = texit - tenter;
+
+mes = ['The satellite is in the shadow of the Earth for ', num2str(tis), ' TU.'];
+disp(mes);
+
+%% Problem 3
+clear all
+clc
+
+% 3.1
+mu = 398600.4415;
+t0 = 0;
+r = [-5357 20459 -2105]; %km
+v = [-5.1725 0.3792 0.2882]; %km/s
+h = cross(r,v);
+rmag = norm(r);
+vmag = norm(v);
+hmag = norm(h);
+p = (hmag^2)/mu;
+energy = (vmag^2)/2 - mu/rmag;
+
+if energy < 0
+    mes = ('The orbit is elliptical!');
+    disp(mes);
+else
+    mes = ('The orbit is hyperbolic');
+    disp(mes);
+end
+
+% 3.2
+
+% Since the orbit is elliptical, we can use another equation for energy to
+% find ellipse.
+
+e = sqrt(1+2*energy*(hmag^2/mu^2));
+truea = acos(((p/rmag)-1)/e);
+eccea = 2*atan2(sqrt(1-e)*tan(truea/2),sqrt(1+e));
+meana = eccea - e*sin(eccea);
+
+mes = ['The true, eccentric, and mean anomalies are (respectively): ', num2str(truea), ', ', num2str(eccea), ', and ', num2str(meana)];
+disp(mes);
+
+% 3.3 
+
+% meana = n(t-tp)
+% t = 0
+a = (mu/((2*pi/p)^2))^(1/3);
+n = sqrt(mu/a^3);
+
+tp = -meana/n;
+
+mes = ['The time of periapsis passage for this orbit is ', num2str(tp), ' seconds.'];
+disp(mes);
+
+% 3.4 
+
+per = 2*pi*(sqrt(a^3/mu));
+t = 0:500:26000;
+[trueav,ecceav,meanav] = propogate(t,n,e,tp);
+T = t./3600;
+rv = p./(1+e.*cos(trueav));
+vv = sqrt(2*(energy+(mu./rv)));
+
+fig = 1;
+figure(fig);
+subplot(3,1,1)
+plot(T,trueav)
+title('True Anomaly vs. Time')
+xlabel('Hours')
+ylabel('Radians')
+hold on
+subplot(3,1,2)
+plot(T,rv)
+title('Position vs. Time')
+xlabel('Hours')
+ylabel('Kilometers')
+subplot(3,1,3)
+plot(T,vv)
+title('Velocity vs. Time')
+xlabel('Hours')
+ylabel('Kilometers per second')
+
+result = find(t==10000);
+ta10 = trueav(result);
+
+mes = ['The true anomaly at 10000 seconds is ', num2str(ta10), ' radians.'];
+disp(mes);
+
+% 3.5
+hold off
+energyv = (vv.^2)./2 - mu./rv;
+energydiff = energyv - energy;
+
+fig = fig + 1;
+figure(fig)
+plot(T,energydiff)
+title('Change in Specific Energy vs. Time')
+xlabel('Hours')
+ylabel('J/kg')
+
+
+mes = ['Since the change in specific energy at any point in time over the course of the orbit is miniscule, my propogations seem to be accurate.'];
+disp(mes);
+
+%% Problem 4
+clear all
+clc
+
+% 4.1
+mu = 398600.4415;
+r = [-5357 20459 0];
+v = [0 2.4559 24.5587];
+h = cross(r,v);
+rmag = norm(r);
+vmag = norm(v);
+hmag = norm(h);
+p = (hmag^2)/mu;
+energy = (vmag^2)/2 - mu/rmag;
+
+if energy < 0
+    mes = ('The orbit is elliptical!');
+    disp(mes);
+else
+    mes = ('The orbit is hyperbolic!');
+    disp(mes);
+end
+
+% 4.2
+
+e = sqrt(1+2*energy*(hmag^2/mu^2));
+truea = acos(((p/rmag)-1)/e);
+eccea = 2*atanh(sqrt(e-1)*tan(truea/2)/sqrt(1+e));
+meana = eccea - e*sinh(eccea);
+
+mes = ['The true, eccentric, and mean anomalies are (respectively): ', num2str(truea), ', ', num2str(eccea), ', and ', num2str(meana)];
+disp(mes);
+
+% 4.3
+
+% meana = n(t-tp)
+% t = 0
+a = p/(e^2-1);
+
+
+tp = (-(mu/(hmag*p))*((e^2-1)^(3/2)))/meana;
+
+mes = ['The time of periapsis passage for this orbit is ', num2str(tp), ' seconds.'];
+disp(mes);
+
+% 4.4
+
+t = -20000:500:20000;
+
+[trueav,ecceav,meanav] = propogateh(t,mu,hmag,e,tp);
+T = t./3600;
+rv = p./(1+e.*cos(trueav));
+vv = sqrt((2*mu./rv)+(mu/a));
+
+fig = 3;
+figure(fig);
+subplot(3,1,1)
+plot(T,trueav)
+title('True Anomaly vs. Time')
+xlabel('Hours')
+ylabel('Radians')
+hold on
+subplot(3,1,2)
+plot(T,rv)
+title('Position vs. Time')
+xlabel('Hours')
+ylabel('Kilometers')
+subplot(3,1,3)
+plot(T,vv)
+title('Velocity vs. Time')
+xlabel('Hours')
+ylabel('Kilometers per second')
+
+result = find(t==10000);
+ta10 = trueav(result);
+
+mes = ['The true anomaly at 10000 seconds is ', num2str(ta10), ' radians.'];
+disp(mes);
+
+% 4.5
+
+hold off
+energyv = (vv.^2)./2 - mu./rv;
+energydiff = energyv - energy;
+
+fig = fig + 1;
+figure(fig)
+plot(T,energydiff)
+title('Change in Specific Energy vs. Time')
+xlabel('Hours')
+ylabel('J/kg')
+
+mes = ('Since the change in specific energy at any point in time over the course of the orbit is miniscule, my propogations seem to be accurate. They are less accurate around periapsis, but they are nonetheless accurate.');
+disp(mes);
+
+##### SOURCE END #####
+--></body></html>

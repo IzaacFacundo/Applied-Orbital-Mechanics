@@ -1,0 +1,498 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Task 1</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-04-22"><meta name="DC.source" content="ProjectTask1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Task 1</h1><!--introduction--><p>Here is the code for task 1</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Orbit 1 LEO</a></li><li><a href="#2">Orbit 2 MEO</a></li><li><a href="#3">Orbit 3 GEO</a></li><li><a href="#4">Obrit 4 Molniya</a></li></ul></div><h2 id="1">Orbit 1 LEO</h2><pre class="codeinput">clear
+clc
+
+mu = 398600.4415;
+a = 6763;
+e = 0.001;
+i = deg2rad(50);
+raan = 0;
+argp = 0;
+ta = 0;
+tp = 2458910; <span class="comment">% JD_utc</span>
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[~,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+<span class="keyword">for</span> i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J2 Difference in meters</span>
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J3</span>
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Sun</span>
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Moon</span>
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% SRP</span>
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Atmospheric Drag</span>
+<span class="keyword">end</span>
+figure(1)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold <span class="string">on</span>
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend(<span class="string">'J2'</span>,<span class="string">'J3'</span>,<span class="string">'Third Body Sun'</span>, <span class="string">'Third Body Moon'</span>, <span class="string">'SRP'</span>, <span class="string">'Atmospheric Drag'</span>)
+ylabel(<span class="string">'Position Error (m)'</span>)
+xlabel(<span class="string">'Time (minutes)'</span>)
+title(<span class="string">'LEO Relative Perturbation'</span>)
+</pre><pre class="codeoutput">If given angle related to singularities, put in input 7 (argp).
+</pre><img vspace="5" hspace="5" src="ProjectTask1_01.png" alt=""> <h2 id="2">Orbit 2 MEO</h2><pre class="codeinput">mu = 398600.4415;
+a = 26560;
+e = 0.001;
+i = deg2rad(55);
+raan = 0;
+argp = 0;
+ta = 0;
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[~,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+<span class="keyword">for</span> i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J2 Difference in meters</span>
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J3</span>
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Sun</span>
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Moon</span>
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% SRP</span>
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Atmospheric Drag</span>
+<span class="keyword">end</span>
+figure(2)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold <span class="string">on</span>
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend(<span class="string">'J2'</span>,<span class="string">'J3'</span>,<span class="string">'Third Body Sun'</span>, <span class="string">'Third Body Moon'</span>, <span class="string">'SRP'</span>, <span class="string">'Atmospheric Drag'</span>)
+ylabel(<span class="string">'Position Error (m)'</span>)
+xlabel(<span class="string">'Time (minutes)'</span>)
+title(<span class="string">'MEO Relative Perturbation'</span>)
+</pre><pre class="codeoutput">If given angle related to singularities, put in input 7 (argp).
+</pre><img vspace="5" hspace="5" src="ProjectTask1_02.png" alt=""> <h2 id="3">Orbit 3 GEO</h2><pre class="codeinput">mu = 398600.4415;
+a = 42164;
+e = 0.01;
+i = deg2rad(0.5);
+raan = deg2rad(-120);
+argp = 0;
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[~,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+<span class="keyword">for</span> i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J2 Difference in meters</span>
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J3</span>
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Sun</span>
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Moon</span>
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% SRP</span>
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Atmospheric Drag</span>
+<span class="keyword">end</span>
+figure(3)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold <span class="string">on</span>
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend(<span class="string">'J2'</span>,<span class="string">'J3'</span>,<span class="string">'Third Body Sun'</span>, <span class="string">'Third Body Moon'</span>, <span class="string">'SRP'</span>, <span class="string">'Atmospheric Drag'</span>)
+ylabel(<span class="string">'Position Error (m)'</span>)
+xlabel(<span class="string">'Time (minutes)'</span>)
+title(<span class="string">'GEO Relative Perturbation'</span>)
+</pre><pre class="codeoutput">If given angle related to singularities, put in input 7 (argp).
+</pre><img vspace="5" hspace="5" src="ProjectTask1_03.png" alt=""> <h2 id="4">Obrit 4 Molniya</h2><pre class="codeinput">mu = 398600.4415;
+a = 26000;
+e = 0.72;
+i = deg2rad(75);
+raan = deg2rad(90);
+argp = deg2rad(-90);
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset(<span class="string">'RelTol'</span>, 1e-10,<span class="string">'AbsTol'</span>,1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[T,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+<span class="keyword">for</span> i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J2 Difference in meters</span>
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% J3</span>
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Sun</span>
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Third Body Moon</span>
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% SRP</span>
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; <span class="comment">% Atmospheric Drag</span>
+<span class="keyword">end</span>
+figure(4)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold <span class="string">on</span>
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend(<span class="string">'J2'</span>,<span class="string">'J3'</span>,<span class="string">'Third Body Sun'</span>, <span class="string">'Third Body Moon'</span>, <span class="string">'SRP'</span>, <span class="string">'Atmospheric Drag'</span>)
+ylabel(<span class="string">'Position Error (m)'</span>)
+xlabel(<span class="string">'Time (minutes)'</span>)
+title(<span class="string">'Molniya Relative Perturbation'</span>)
+</pre><pre class="codeoutput">If given angle related to singularities, put in input 7 (argp).
+</pre><img vspace="5" hspace="5" src="ProjectTask1_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Task 1
+% Here is the code for task 1
+
+
+%% Orbit 1 LEO
+clear
+clc
+
+mu = 398600.4415;
+a = 6763;
+e = 0.001;
+i = deg2rad(50);
+raan = 0;
+argp = 0;
+ta = 0;
+tp = 2458910; % JD_utc
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[~,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+for i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; % J2 Difference in meters
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; % J3
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; % Third Body Sun
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; % Third Body Moon
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; % SRP
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; % Atmospheric Drag
+end
+figure(1)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold on
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend('J2','J3','Third Body Sun', 'Third Body Moon', 'SRP', 'Atmospheric Drag')
+ylabel('Position Error (m)')
+xlabel('Time (minutes)')
+title('LEO Relative Perturbation')
+%% Orbit 2 MEO
+mu = 398600.4415;
+a = 26560;
+e = 0.001;
+i = deg2rad(55);
+raan = 0;
+argp = 0;
+ta = 0;
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[~,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+for i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; % J2 Difference in meters
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; % J3
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; % Third Body Sun
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; % Third Body Moon
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; % SRP
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; % Atmospheric Drag
+end
+figure(2)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold on
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend('J2','J3','Third Body Sun', 'Third Body Moon', 'SRP', 'Atmospheric Drag')
+ylabel('Position Error (m)')
+xlabel('Time (minutes)')
+title('MEO Relative Perturbation')
+%% Orbit 3 GEO
+mu = 398600.4415;
+a = 42164;
+e = 0.01;
+i = deg2rad(0.5);
+raan = deg2rad(-120);
+argp = 0;
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[~,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+for i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; % J2 Difference in meters
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; % J3
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; % Third Body Sun
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; % Third Body Moon
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; % SRP
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; % Atmospheric Drag
+end
+figure(3)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold on
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend('J2','J3','Third Body Sun', 'Third Body Moon', 'SRP', 'Atmospheric Drag')
+ylabel('Position Error (m)')
+xlabel('Time (minutes)')
+title('GEO Relative Perturbation')
+%% Obrit 4 Molniya
+mu = 398600.4415;
+a = 26000;
+e = 0.72;
+i = deg2rad(75);
+raan = deg2rad(90);
+argp = deg2rad(-90);
+
+[r,v] = oe2rv(mu,a,e,i,raan,ta,argp);
+
+y0 = [r; v];
+time = tp:10/(24*60):tp+5;
+time = time * 86400;
+odeoptions = odeset('RelTol', 1e-10,'AbsTol',1e-20);
+[~,Yj2] = ode45(@j2prop,time,y0,odeoptions);
+[~,Ytb] = ode45(@twobody,time,y0,odeoptions);
+[~,Yj3] = ode45(@j3prop,time,y0,odeoptions);
+[~,Ytbs] = ode45(@threebodysun,time,y0,odeoptions);
+[~,Ytbm] = ode45(@threebodymoon,time,y0,odeoptions);
+[~,Ysrp] = ode45(@srpprop,time,y0,odeoptions);
+[T,Yd] = ode45(@atmdrag,time,y0,odeoptions);
+
+
+    drj2 = zeros(length(time),1);
+    drj3 = zeros(length(time),1);
+    drtbs = zeros(length(time),1);
+    drtbm = zeros(length(time),1);
+    drsrp = zeros(length(time),1);
+    drd = zeros(length(time),1);
+
+for i = 1:length(time)
+    drj2(i) = norm(Yj2(i,1:3) - Ytb(i,1:3))*1000; % J2 Difference in meters
+    drj3(i) = norm(Yj3(i,1:3) - Ytb(i,1:3))*1000; % J3
+    drtbs(i) = norm(Ytbs(i,1:3) - Ytb(i,1:3))*1000; % Third Body Sun
+    drtbm(i) = norm(Ytbm(i,1:3) - Ytb(i,1:3))*1000; % Third Body Moon
+    drsrp(i) = norm(Ysrp(i,1:3) - Ytb(i,1:3))*1000; % SRP
+    drd(i) = norm(Yd(i,1:3) - Ytb(i,1:3))*1000; % Atmospheric Drag
+end
+figure(4)
+time = (time - tp.*86400)./60;
+semilogy(time, drj2)
+hold on
+semilogy(time, drj3)
+semilogy(time, drtbs)
+semilogy(time, drtbm)
+semilogy(time, drsrp)
+semilogy(time, drd)
+legend('J2','J3','Third Body Sun', 'Third Body Moon', 'SRP', 'Atmospheric Drag')
+ylabel('Position Error (m)')
+xlabel('Time (minutes)')
+title('Molniya Relative Perturbation')
+
+##### SOURCE END #####
+--></body></html>

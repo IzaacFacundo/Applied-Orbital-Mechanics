@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>fullprop</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-04-22"><meta name="DC.source" content="fullprop.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> dY = fullprop(t,y)
+    mu = 398600.4415000;
+    J2 =  0.0010826267;
+    J3 = -2.532700000000000e-06;
+    dY = zeros(6,1);
+    dY(1:3) = y(4:6);
+    radEarth = 6378.136300000;
+    j2j3acc = j2j3accel(y(1:3), J2, J3, radEarth, mu); <span class="comment">% j2j3</span>
+    Amr = 0.01;
+    Cr = 1.5;
+    Cd =2;
+
+    musun = 1.327E11;
+    mumoon = 3903;
+
+    days = t / 86400;
+    x = sun(days)*149597870.7;
+    asun = musun.*(((x - y(1:3))/(norm(x - y(1:3)))^3) - (x/(norm(x))^3));
+
+    z = moon(days)*6378.1363; <span class="comment">% earth radii to km</span>
+    amoon = mumoon.*(((z - y(1:3))/(norm(z - y(1:3)))^3) - (z/(norm(z))^3));
+
+
+    omega = 7.2921e-5;
+    h = norm(y(1:3)) - radEarth;
+    [rho, h0, H] = getDensityParams( h );
+    density = rho.*exp(-(h-h0)./H);
+    vrel = y(4:6) - cross([0 0 omega]',y(1:3));
+    ad = -0.5*Cd*Amr*density*norm(vrel)*vrel*1000;
+
+    srp = asrp(y(1:3), x, Cr, Amr);
+
+    dY(4) = (-mu/(norm(y(1:3))^3))*y(1) + j2j3acc(1) + ad(1) + srp(1) + amoon(1) + asun(1);
+    dY(5) = (-mu/(norm(y(1:3))^3))*y(2) + j2j3acc(2) + ad(2) + srp(2) + amoon(2) + asun(2);
+    dY(6) = (-mu/(norm(y(1:3))^3))*y(3) + j2j3acc(3) + ad(3) + srp(3) + amoon(3) + asun(3);
+
+
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in fullprop (line 6)
+    dY(1:3) = y(4:6);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function dY = fullprop(t,y)
+    mu = 398600.4415000;
+    J2 =  0.0010826267;
+    J3 = -2.532700000000000e-06;
+    dY = zeros(6,1);
+    dY(1:3) = y(4:6);
+    radEarth = 6378.136300000;
+    j2j3acc = j2j3accel(y(1:3), J2, J3, radEarth, mu); % j2j3
+    Amr = 0.01;
+    Cr = 1.5;
+    Cd =2;
+    
+    musun = 1.327E11;
+    mumoon = 3903;
+    
+    days = t / 86400;
+    x = sun(days)*149597870.7;
+    asun = musun.*(((x - y(1:3))/(norm(x - y(1:3)))^3) - (x/(norm(x))^3));
+    
+    z = moon(days)*6378.1363; % earth radii to km
+    amoon = mumoon.*(((z - y(1:3))/(norm(z - y(1:3)))^3) - (z/(norm(z))^3));
+
+
+    omega = 7.2921e-5;
+    h = norm(y(1:3)) - radEarth;
+    [rho, h0, H] = getDensityParams( h );
+    density = rho.*exp(-(h-h0)./H);
+    vrel = y(4:6) - cross([0 0 omega]',y(1:3));
+    ad = -0.5*Cd*Amr*density*norm(vrel)*vrel*1000;
+    
+    srp = asrp(y(1:3), x, Cr, Amr);
+    
+    dY(4) = (-mu/(norm(y(1:3))^3))*y(1) + j2j3acc(1) + ad(1) + srp(1) + amoon(1) + asun(1);
+    dY(5) = (-mu/(norm(y(1:3))^3))*y(2) + j2j3acc(2) + ad(2) + srp(2) + amoon(2) + asun(2);
+    dY(6) = (-mu/(norm(y(1:3))^3))*y(3) + j2j3acc(3) + ad(3) + srp(3) + amoon(3) + asun(3);
+    
+    
+    
+end
+
+##### SOURCE END #####
+--></body></html>

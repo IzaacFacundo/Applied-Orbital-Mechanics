@@ -1,0 +1,161 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>I will be using a Newton Raphson Solver for this homework</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-03-04"><meta name="DC.source" content="cf3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>I will be using a Newton Raphson Solver for this homework</h1><pre class="codeinput">M1 = 1.55;<span class="comment">% Mach Number</span>
+t = 5; <span class="comment">% Theta in degrees</span>
+t = deg2rad(t);
+g = 1.4; <span class="comment">% gamma, the gas constant for air</span>
+R = 287; <span class="comment">% ideal gas constant for air</span>
+cp = -(R*g)/(1-g);
+
+f = @(b)((2*cot(b)*((M1^2)*(sin(b))^2 - 1))/((M1^2)*(g + cos(2*b)) + 2) - tan(t)); <span class="comment">% b is Beta</span>
+iter = 0;
+syms <span class="string">bsym</span>
+df = matlabFunction(diff(f(bsym)));
+bm_func = @(f,b)(b-f(b)/df(b));
+err = 1;
+tol = 0.001;
+maxiter = 50;
+start = 1;
+bm = start;
+bmold1 = bm;
+bmold2 = bm+0.01;
+<span class="keyword">while</span> err&gt;tol &amp;&amp; iter&lt;maxiter
+    iter = iter +1;
+    bm = bm_func(f,bmold1);
+    err = abs((bm-bmold1)/bm)*100;
+    bmold2 = bmold1;
+    bmold1 = bm;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> t &gt; 0
+    b = rad2deg(bm); <span class="comment">% b is beta in degrees</span>
+<span class="keyword">elseif</span> t == 0
+    b = 90;
+    bm = pi/2;
+<span class="keyword">end</span>
+M1n = M1*sin(bm); <span class="comment">% bm is beta in radians</span>
+
+M2n = sqrt((1 + ((g-1)/2)*(M1n^2))/(g*(M1n^2) - ((g-1)/2)));
+M2 = (M2n)/sin(bm-t);
+
+p21 = 1 + (2*g*(M1n^2 - 1))/(g+1); <span class="comment">% static pressure ratio</span>
+dels = cp*log(p21*(2 + (g-1)*M1n^2)/((g+1)*M1n^2)) - R*log(p21); <span class="comment">% change in entropy</span>
+po21 = exp(-dels/R); <span class="comment">% stagnation pressure ratio</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% I will be using a Newton Raphson Solver for this homework
+
+
+M1 = 1.55;% Mach Number
+t = 5; % Theta in degrees
+t = deg2rad(t);
+g = 1.4; % gamma, the gas constant for air
+R = 287; % ideal gas constant for air
+cp = -(R*g)/(1-g); 
+
+f = @(b)((2*cot(b)*((M1^2)*(sin(b))^2 - 1))/((M1^2)*(g + cos(2*b)) + 2) - tan(t)); % b is Beta
+iter = 0;
+syms bsym
+df = matlabFunction(diff(f(bsym)));
+bm_func = @(f,b)(b-f(b)/df(b));
+err = 1;
+tol = 0.001;
+maxiter = 50;
+start = 1;
+bm = start;
+bmold1 = bm;
+bmold2 = bm+0.01;
+while err>tol && iter<maxiter    
+    iter = iter +1;
+    bm = bm_func(f,bmold1);    
+    err = abs((bm-bmold1)/bm)*100;    
+    bmold2 = bmold1;    
+    bmold1 = bm;
+end
+
+if t > 0
+    b = rad2deg(bm); % b is beta in degrees
+elseif t == 0
+    b = 90;
+    bm = pi/2;
+end
+M1n = M1*sin(bm); % bm is beta in radians
+
+M2n = sqrt((1 + ((g-1)/2)*(M1n^2))/(g*(M1n^2) - ((g-1)/2)));
+M2 = (M2n)/sin(bm-t);
+
+p21 = 1 + (2*g*(M1n^2 - 1))/(g+1); % static pressure ratio
+dels = cp*log(p21*(2 + (g-1)*M1n^2)/((g+1)*M1n^2)) - R*log(p21); % change in entropy
+po21 = exp(-dels/R); % stagnation pressure ratio
+
+
+
+##### SOURCE END #####
+--></body></html>
